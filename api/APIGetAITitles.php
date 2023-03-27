@@ -1,9 +1,8 @@
 <?php
 
 /**
- * API Register Route class
- *
- * @package MultiPOS - Point of Sale for WooCommerce
+ * API Get AI Titles
+
  * @version 1.0.0
  */
 

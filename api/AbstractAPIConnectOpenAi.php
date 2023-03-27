@@ -1,10 +1,7 @@
 <?php
 
 /**
- * API Register Route class
- *
- * @package MultiPOS - Point of Sale for WooCommerce
- * @version 1.0.0
+ * Abstract API Connect to OpenAi
  */
 
 namespace MOpenAi\api;
