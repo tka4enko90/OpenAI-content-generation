@@ -3,6 +3,11 @@
         "tectalic/openai": "^1.4",
         "guzzlehttp/guzzle": "^7.5"
     },
+    "autoload": {
+        "psr-4": {
+            "MOpenAi\\": "./"
+        }
+    },
     "config": {
         "allow-plugins": {
             "php-http/discovery": true

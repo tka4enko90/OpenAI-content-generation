@@ -20,41 +20,19 @@ use Tectalic\OpenAi\Authentication;
 use Tectalic\OpenAi\Client;
 use Tectalic\OpenAi\Manager;
 use Tectalic\OpenAi\Models\Completions\CreateRequest;
+use MOpenAi\api\APIGetAITitles;
 
+$request = new APIGetAITitles();
+$response = $request->request('Connent');
+?>
+    <pre>
+    <?php print_r($response);?>
+    </pre>
+<?php
 add_action('wp_head', 'check_result');
 function check_result()
 {
-    $options = get_option('option_name1');
-    $oai_key = $options['input'] ?? null;
 
-    if (!$oai_key) {
-        return;
-    }
-
-    $openaiClient = Manager::build(
-        new \GuzzleHttp\Client(),
-        new Authentication($oai_key)
-    );
-
-    /** @var \Tectalic\OpenAi\Models\ChatCompletions\CreateResponse $response */
-    $response = $openaiClient->chatCompletions()->create(
-        new \Tectalic\OpenAi\Models\ChatCompletions\CreateRequest([
-            'model' => 'gpt-3.5-turbo',
-            'messages' => [
-                [
-                    'role' => 'user',
-//                    'content' => 'rewrite the following article in a more natural language english'
-                    'content' => 'Can I provide to you article for rewrite the following article in a more natural language english for me?'
-                ],
-            ],
-        ])
-    )->toModel();
-
-
-
-    echo '<pre>$response: ';
-    print_r($response);
-    echo '</pre>';
 //    die();
 }
 

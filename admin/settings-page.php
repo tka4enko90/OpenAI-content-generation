@@ -44,6 +44,7 @@ function mopenai_option_settings(){
 }
 
 function mopenai_render_field($args){
+
     $option_name = "option_name" . $args['id'];
     $val = get_option($option_name);
     $val = $val['input'] ?? null;
