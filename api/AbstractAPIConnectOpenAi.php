@@ -14,9 +14,10 @@ use Tectalic\OpenAi\Models\Completions\CreateRequest;
 defined('ABSPATH') || exit();
 
 
-    /**
-     * Register API Routes Class.
-     */
+/**
+ * Class AbstractAPIConnectOpenAi
+ * @package MOpenAi\api
+ */
 abstract class AbstractAPIConnectOpenAi
 {
     protected $openaiClient;

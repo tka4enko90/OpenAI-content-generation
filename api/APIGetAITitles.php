@@ -2,7 +2,6 @@
 
 /**
  * API Get AI Titles
-
  * @version 1.0.0
  */
 
@@ -12,13 +11,12 @@ namespace MOpenAi\api;
 defined('ABSPATH') || exit();
 
 
-    /**
-     * Register API Routes Class.
-     */
+/**
+ * Class APIGetAITitles
+ * @package MOpenAi\api
+ */
 final class APIGetAITitles extends AbstractAPIConnectOpenAi
 {
-
-
     public function request($content)
     {
         $args = [
