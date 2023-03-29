@@ -21,14 +21,24 @@ use Tectalic\OpenAi\Client;
 use Tectalic\OpenAi\Manager;
 use Tectalic\OpenAi\Models\Completions\CreateRequest;
 use MOpenAi\api\APIGetAITitles;
+use MOpenAi\admin\AdminEditors;
+use MOpenAi\gutenberg\GutenbergBlocks;
+use MOpenAi\api\APIRegisterRoutes;
 
-$request = new APIGetAITitles();
-$response = $request->request('Connent');
-?>
-    <pre>
-    <?php print_r($response);?>
-    </pre>
-<?php
+if (! defined('ABSPATH')) {
+    exit;
+}
+define('PLUGIN_DIR', plugin_dir_url(__FILE__));
+
+add_action('init', function (){
+    new APIRegisterRoutes();
+    new AdminEditors();
+    new GutenbergBlocks();
+});
+//$request = new APIGetAITitles();
+
+//$response = $request->request('Connent');
+
 add_action('wp_head', 'check_result');
 function check_result()
 {

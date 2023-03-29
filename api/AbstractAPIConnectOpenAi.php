@@ -51,6 +51,6 @@ abstract class AbstractAPIConnectOpenAi
             ])
         );
     }
-    abstract protected function request($args);
+    abstract protected function request(\WP_REST_Request $args);
 
 }
