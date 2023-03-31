@@ -2,7 +2,7 @@
 /*
 Plugin Name: OpenAI Generation
 Description: OpenAI Generation
-Version: 1.0.1
+Version: 2.0.0
 Text Domain: mopenai
 Domain Path: /lang
 */
@@ -35,16 +35,6 @@ add_action('init', function (){
     new AdminEditors();
     new GutenbergBlocks();
 });
-//$request = new APIGetAITitles();
-
-//$response = $request->request('Connent');
-
-add_action('wp_head', 'check_result');
-function check_result()
-{
-
-//    die();
-}
 
 
 

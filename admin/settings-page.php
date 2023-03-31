@@ -15,6 +15,8 @@ function mopenai_render_options_page(){
     <div class="wrap">
         <h2><?php echo get_admin_page_title() ?></h2>
 
+        <h3>Current PHP version: <?php echo phpversion(); ?></h3>
+
         <form action="options.php" method="POST">
             <?php
             settings_fields( 'option_group' );
@@ -31,7 +33,7 @@ function mopenai_option_settings(){
     register_setting( 'option_group', 'option_name1', 'mopenai_callback' );
     register_setting( 'option_group', 'option_name2', 'mopenai_callback' );
 
-    add_settings_section( 'mopenai_section_id', 'Настройка опций плагина', '', 'mopenai_opts' );
+    add_settings_section( 'mopenai_section_id', __('Setting Plugin Options', 'mopenai'), '', 'mopenai_opts' );
 
     add_settings_field('mopenai_api_token', 'API token', 'mopenai_render_field', 'mopenai_opts', 'mopenai_section_id',['id' => 1] );
     add_settings_field('mopenai_model', 'model', 'mopenai_render_field', 'mopenai_opts', 'mopenai_section_id',['id' => 2] );
