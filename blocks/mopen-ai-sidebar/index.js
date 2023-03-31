@@ -72,7 +72,7 @@ const MOpenAISidebar = () => {
     return (
         <>
             <PluginSidebarMoreMenuItem target="mopenai-settings-sidebar">
-                {__('Open AI')}
+                Open AI
             </PluginSidebarMoreMenuItem>
             <PluginSidebar
                 name="mopenai-settings-sidebar"
