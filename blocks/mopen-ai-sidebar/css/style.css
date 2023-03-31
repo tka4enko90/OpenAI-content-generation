@@ -1,0 +1,15 @@
+.components-modal__item {
+    padding: 5px;
+    font-weight: bold;
+    cursor: pointer;
+}
+.components-modal__loader {
+    text-align: center;
+}
+.mopen-ai__buton-group {
+    display: flex;
+    justify-content: space-around;
+}
+.mopen-ai__body {
+    padding: 10px;
+}
