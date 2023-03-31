@@ -1,0 +1,31 @@
+{
+  "name": "wp-chat-gpt-plugin",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "dependencies": {
+    "@wordpress/api-fetch": "^6.26.0",
+    "@wordpress/core-data": "^6.6.0",
+    "@wordpress/editor": "^13.6.0",
+    "@wordpress/icons": "^9.20.0"
+  },
+  "devDependencies": {
+    "@wordpress/base-styles": "^4.21.0",
+    "@wordpress/scripts": "^26.0.0"
+  },
+  "scripts": {
+    "build": "wp-scripts build",
+    "format": "wp-scripts format",
+    "lint:css": "wp-scripts lint-style --webpack-src-dir=blocks",
+    "lint:js": "wp-scripts lint-js",
+    "packages-update": "wp-scripts packages-update",
+    "plugin-zip": "wp-scripts plugin-zip",
+    "start": "wp-scripts start --webpack-src-dir=blocks"
+  },
+  "repository": {
+    "type": "git",
+    "url": "ssh://git@git.markupus.tech:7653/wpchat/wp-chat-gpt-plugin.git"
+  },
+  "author": "",
+  "license": "ISC"
+}
