@@ -9,15 +9,14 @@
 
 namespace MOpenAi\api;
 
-use MOpenAi\api\APIGetAITitles;
-
+use MOpenAi\api\APIConnectOpenAi;
 
 /**
  * Register API Routes Class.
  */
 class APIRegisterRoutes
 {
-
+    private $openAI;
     /**
      * Configuration Variable
      *
@@ -30,32 +29,11 @@ class APIRegisterRoutes
     public function __construct()
     {
         global $wp_rewrite;
-//        add_filter('rest_pre_serve_request', array($this, 'initCors'), 1);
         add_action('rest_api_init', [$this, 'mopen_ai_register_api_routes']);
         update_option( "rewrite_rules", FALSE );
         $wp_rewrite->flush_rules( true );
     }
 
-
-    /**
-     * @param $value
-     * @return mixed
-     * Init cors for dev
-     */
-   public function initCors( $value ) {
-        $origin = get_http_origin();
-        $allowed_origins = ['localhost:8080'];
-
-        if ( $origin && in_array( $origin, $allowed_origins ) ) {
-
-            header( 'Access-Control-Allow-Origin: *' );
-            header( 'Access-Control-Allow-Methods: POST, GET' );
-            header( 'Access-Control-Allow-Headers: Content-Type, Authorization' );
-            header( 'Access-Control-Allow-Credentials: true' );
-        }
-
-        return $value;
-    }
     /**
      * Register API routes function
      *
@@ -67,9 +45,10 @@ class APIRegisterRoutes
         do_action('mopen_ai_before_register_pos_rest_routes');
 
         if (!is_admin()) {
-
+            $this->openAI = new APIConnectOpenAi();
             $api_routes = [
-                'get-titles'              => new APIGetAITitles(),
+                'get-titles'              => new APIGetAITitles($this->openAI),
+                'get-excerpts'              => new APIGetAIExcerpts($this->openAI),
             ];
 
             foreach ($api_routes as $key => $value) {
@@ -87,8 +66,5 @@ class APIRegisterRoutes
             }
         }
         do_action('mopen_ai_after_register_pos_rest_routes');
-
-
-
     }
 }

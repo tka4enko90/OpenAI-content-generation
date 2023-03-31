@@ -4,6 +4,6 @@ module.exports = {
     ...defaultConfig,
     entry : {
         ...getWebpackEntryPoints(),
-        blocks: './blocks/title/index.js'
+        blocks: './blocks/mopen-ai-sidebar/index.js'
     }
 }

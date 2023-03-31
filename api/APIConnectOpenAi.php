@@ -5,6 +5,7 @@
  */
 
 namespace MOpenAi\api;
+
 use Symfony\Component\HttpClient\Psr18Client;
 use Tectalic\OpenAi\Authentication;
 use Tectalic\OpenAi\Client;
@@ -15,17 +16,16 @@ defined('ABSPATH') || exit();
 
 
 /**
- * Class AbstractAPIConnectOpenAi
+ * Class APIConnectOpenAi
  * @package MOpenAi\api
  */
-abstract class AbstractAPIConnectOpenAi
+final class APIConnectOpenAi
 {
     protected $openaiClient;
     /**
      * Configuration Variable
      *
      * @var array
-
 
     /**
      * Constructor.
@@ -37,13 +37,13 @@ abstract class AbstractAPIConnectOpenAi
         if (!$oai_key) {
             return;
         }
-        $this->openaiClient = Manager::build(
+
+        $this->openaiClient = Manager::isGlobal() ? Manager::access() :  Manager::build(
             new \GuzzleHttp\Client(),
             new Authentication($oai_key)
         );
-
     }
-    protected function createRequest($args) {
+    public function createRequest($args) {
         return $this->openaiClient->chatCompletions()->create(
             new \Tectalic\OpenAi\Models\ChatCompletions\CreateRequest([
                 'model' => 'gpt-3.5-turbo',
@@ -51,6 +51,4 @@ abstract class AbstractAPIConnectOpenAi
             ])
         );
     }
-    abstract protected function request(\WP_REST_Request $args);
-
 }
