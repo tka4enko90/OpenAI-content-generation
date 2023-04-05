@@ -1,5 +1,6 @@
 {
     "require": {
+        "php": ">=7.2",
         "tectalic/openai": "^1.4",
         "guzzlehttp/guzzle": "^7.5"
     },
@@ -9,6 +10,7 @@
         }
     },
     "config": {
+        "platform.php": "7.2.0",
         "allow-plugins": {
             "php-http/discovery": true
         }
