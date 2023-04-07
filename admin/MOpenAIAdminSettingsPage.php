@@ -88,12 +88,6 @@ class MOpenAIAdminSettingsPage
 
         add_settings_field('mopenai_api_token', __('API token', 'mopenai'), array($this, 'mopenai_render_field'), 'mopenai_opts', 'mopenai_settings_section',['id' => 'mopenai_api_token']);
         add_settings_field('mopenai_model', __('Model', 'mopenai'), array( $this, 'model_field' ), 'mopenai_opts', 'mopenai_settings_section', ['id' => 'mopenai_model']);
-        add_settings_field('mopenai_temperature', __('Temperature', 'mopenai'), array($this, 'mopenai_render_field'), 'mopenai_opts', 'mopenai_settings_section',['id' => 'mopenai_temperature']);
-        add_settings_field('mopenai_max_tokens', __('Parameter "max_tokens"', 'mopenai'), array($this, 'mopenai_render_field'), 'mopenai_opts', 'mopenai_settings_section',['id' => 'mopenai_max_tokens']);
-        add_settings_field('mopenai_top_p', __('Parameter "top_p"', 'mopenai'), array($this, 'mopenai_render_field'), 'mopenai_opts', 'mopenai_settings_section',['id' => 'mopenai_top_p']);
-        add_settings_field('mopenai_best_of', __('Parameter "best_of"', 'mopenai'), array($this, 'mopenai_render_field'), 'mopenai_opts', 'mopenai_settings_section',['id' => 'mopenai_best_of']);
-        add_settings_field('mopenai_frequency_penalty', __('Parameter "frequency_penalty"', 'mopenai'), array($this, 'mopenai_render_field'), 'mopenai_opts', 'mopenai_settings_section',['id' => 'mopenai_frequency_penalty']);
-        add_settings_field('mopenai_presence_penalty', __('Parameter "presence_penalty"', 'mopenai'), array($this, 'mopenai_render_field'), 'mopenai_opts', 'mopenai_settings_section',['id' => 'mopenai_presence_penalty']);
     }
 
 

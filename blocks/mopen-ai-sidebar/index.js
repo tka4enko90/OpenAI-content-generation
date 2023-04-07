@@ -11,10 +11,12 @@ const MOpenAISidebar = () => {
     const [ excerpts, setExcerpts ] = useState( [] );
     const [ isLoader, setLoader ] = useState( false );
     const [ modalHeader, setModalHeader ] = useState( '' );
+    const [ errors, setErrors ] = useState( '' );
 
     const closeModal = () => {
         setPosts([]);
         setExcerpts([]);
+        setErrors('');
         setOpen( false );
     };
     let fetchRequest  = (param, queryParams ) => {
@@ -51,8 +53,10 @@ const MOpenAISidebar = () => {
         }
         setOpen( false );
     };
+
     const getResponse = (param) => {
         setPosts([]);
+        setErrors('');
         setExcerpts([]);
         const queryParams = { content: temp };
         console.log(queryParams);
@@ -65,9 +69,15 @@ const MOpenAISidebar = () => {
         setOpen( true );
         setLoader( true );
         fetchRequest(param, queryParams).then( ( response ) => {
-            param === "get-titles" ? setPosts(JSON.parse(response)) : setExcerpts(JSON.parse(response));
+            let json_response = JSON.parse(response);
+            if (json_response['error'] && json_response['error']['message']) {
+                setErrors(json_response['error']['message']);
+            } else {
+                param === "get-titles" ? setPosts(json_response) : setExcerpts(json_response);
+            }
             setLoader(false)
         } );
+
     };
     return (
         <>
@@ -92,6 +102,9 @@ const MOpenAISidebar = () => {
                                 <div class="components-modal__loader">
                                    <Spinner />
                                 </div>
+                            )}
+                            { errors && (
+                                <div class='components-modal__item'>{errors}</div>
                             )}
                             { posts && (
                                 posts.map((item, i) => {
