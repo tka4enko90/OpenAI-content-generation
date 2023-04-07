@@ -162,9 +162,11 @@ const MOpenAISidebar = () => {
   const [excerpts, setExcerpts] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useState)([]);
   const [isLoader, setLoader] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useState)(false);
   const [modalHeader, setModalHeader] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useState)('');
+  const [errors, setErrors] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useState)('');
   const closeModal = () => {
     setPosts([]);
     setExcerpts([]);
+    setErrors('');
     setOpen(false);
   };
   let fetchRequest = (param, queryParams) => {
@@ -214,6 +216,7 @@ const MOpenAISidebar = () => {
   };
   const getResponse = param => {
     setPosts([]);
+    setErrors('');
     setExcerpts([]);
     const queryParams = {
       content: temp
@@ -228,7 +231,12 @@ const MOpenAISidebar = () => {
     setOpen(true);
     setLoader(true);
     fetchRequest(param, queryParams).then(response => {
-      param === "get-titles" ? setPosts(JSON.parse(response)) : setExcerpts(JSON.parse(response));
+      let json_response = JSON.parse(response);
+      if (json_response['error'] && json_response['error']['message']) {
+        setErrors(json_response['error']['message']);
+      } else {
+        param === "get-titles" ? setPosts(json_response) : setExcerpts(json_response);
+      }
       setLoader(false);
     });
   };
@@ -255,7 +263,9 @@ const MOpenAISidebar = () => {
     class: "components-modal__body"
   }, isLoader && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     class: "components-modal__loader"
-  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.Spinner, null)), posts && posts.map((item, i) => {
+  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.Spinner, null)), errors && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    class: "components-modal__item"
+  }, errors), posts && posts.map((item, i) => {
     return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
       class: "components-modal__item",
       onClick: () => dispatchTitle(item)

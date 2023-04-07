@@ -47,12 +47,15 @@ final class APIConnectOpenAi
             new Authentication($oai_key)
         );
     }
+
     public function createRequest($args) {
+
         return $this->openaiClient->chatCompletions()->create(
             new \Tectalic\OpenAi\Models\ChatCompletions\CreateRequest([
                 'model' => $this->options['mopenai_model'],
                 'messages' => $args,
-            ])
+                ])
         );
     }
+
 }

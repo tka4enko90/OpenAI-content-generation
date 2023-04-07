@@ -43,6 +43,15 @@ if( ! class_exists('MOpenAi') ) {
                 return;
             }
 
+            if ( !function_exists( 'use_block_editor_for_post' ) ) {
+
+                deactivate_plugins( plugin_basename( __FILE__ ) );
+                add_action( 'admin_notices', [$this, 'mopenai_gutenberg_admin_notice'] );
+
+                return;
+            }
+
+
 
             add_action('init', [$this, 'initialization']);
             add_action( 'plugins_loaded', [$this, 'mopenail_plugin_textdomain'] );
@@ -54,6 +63,17 @@ if( ! class_exists('MOpenAi') ) {
 
         public function mopenai_incompatible_admin_notice() {
             echo '<div class="error"><p>' . __( 'OpenAI Generation requires PHP 7.2 (or higher) to function properly. Please upgrade PHP. The Plugin has been auto-deactivated.', 'mopenai' ) . '</p></div>';
+            if ( isset( $_GET['activate'] ) ) {
+                unset( $_GET['activate'] );
+            }
+        }
+
+        /**
+         * Message about Gutenberg
+         */
+
+        public function mopenai_gutenberg_admin_notice() {
+            echo '<div class="error"><p>' . __( 'The new text editor (Gutenberg) is not included. The plugin only works with the Gutenberg editor.', 'mopenai' ) . '</p></div>';
             if ( isset( $_GET['activate'] ) ) {
                 unset( $_GET['activate'] );
             }
