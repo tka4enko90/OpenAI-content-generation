@@ -52,7 +52,7 @@ if( ! class_exists('MOpenAi') ) {
             }
 
 
-
+            add_action( 'admin_init', [$this, 'check_editor'] );
             add_action('init', [$this, 'initialization']);
             add_action( 'plugins_loaded', [$this, 'mopenail_plugin_textdomain'] );
         }
@@ -80,13 +80,29 @@ if( ! class_exists('MOpenAi') ) {
         }
 
         /**
+         * Check if Gutenberg is enabled or not
+         * @return bool
+         */
+        public function check_editor() {
+            $check_editor = false;
+            if (has_filter('use_block_editor_for_post') || is_plugin_active( 'classic-editor/classic-editor.php' )) {
+                deactivate_plugins( plugin_basename( __FILE__ ) );
+                add_action( 'admin_notices', [$this, 'mopenai_gutenberg_admin_notice'] );
+                $check_editor = true;
+            }
+            return $check_editor;
+        }
+
+        /**
          * Plugin functionality initialization
          */
         public function initialization()
         {
-            new MOpenAIAdminSettingsPage();
-            new APIRegisterRoutes();
-            new GutenbergBlocks();
+            if (!$this->check_editor()) {
+                new MOpenAIAdminSettingsPage();
+                new APIRegisterRoutes();
+                new GutenbergBlocks();
+            }
         }
 
         /**
