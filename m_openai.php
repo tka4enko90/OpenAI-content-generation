@@ -1,9 +1,10 @@
 <?php
 /*
-Plugin Name: OpenAI Generation
-Description: OpenAI Generation
-Version: 1.0.1
-Text Domain: mopenai
+Plugin Name: ChatGPT - OpenAI Content generation
+Description: ChatGPT - OpenAI helps to create a title & an excerpt based on the content of post using ChatGPT API.
+Version: 1.1
+Author URI: https://markupus.com/
+Text Domain: markupus
 Domain Path: /lang
 */
 
