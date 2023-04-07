@@ -42,8 +42,10 @@ final class APIGetAITitles
         ];
         try {
 
-            if (!$this->check_nonce() || !$request['content']) {
-                return [ 'error' => ['message' => __('Request security check failed', 'mopenai')] ];
+            if (!$this->check_nonce()) {
+                return json_encode([ 'error' => ['message' => __('Request security check failed', 'mopenai')] ]);
+            } elseif (!$request['content']) {
+                return json_encode([ 'error' => ['message' => __('No content to generate', 'mopenai')] ]);
             }
 
             if (isset($this->openAI->createRequest($args)->toArray()['error'])) {
