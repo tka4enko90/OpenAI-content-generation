@@ -62,3 +62,7 @@ Thumbs.db
 ._.DS_Store
 .idea
 
+vendor/composer/installed.php
+vendor/composer/InstalledVersions.php
+vendor/composer/platform_check.php
+

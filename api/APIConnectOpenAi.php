@@ -22,6 +22,8 @@ defined('ABSPATH') || exit();
 final class APIConnectOpenAi
 {
     protected $openaiClient;
+
+    protected $options;
     /**
      * Configuration Variable
      *
@@ -32,8 +34,10 @@ final class APIConnectOpenAi
      */
     public function __construct()
     {
-        $options = get_option('option_name1');
-        $oai_key = $options['input'] ?? null;
+        $this->options = get_option('mopeanai_setting');
+
+        $oai_key = isset($this->options['mopenai_api_token']) ? $this->options['mopenai_api_token'] : null;
+
         if (!$oai_key) {
             return;
         }
@@ -46,7 +50,7 @@ final class APIConnectOpenAi
     public function createRequest($args) {
         return $this->openaiClient->chatCompletions()->create(
             new \Tectalic\OpenAi\Models\ChatCompletions\CreateRequest([
-                'model' => 'gpt-3.5-turbo',
+                'model' => $this->options['mopenai_model'],
                 'messages' => $args,
             ])
         );
