@@ -13,3 +13,8 @@
 .mopen-ai__body {
     padding: 10px;
 }
+.components-notice.is-error,
+.components-notice.is-success,
+.components-notice.is-dismissible {
+    padding-right: 0;
+}
