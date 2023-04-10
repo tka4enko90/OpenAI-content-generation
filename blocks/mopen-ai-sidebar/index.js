@@ -21,21 +21,18 @@ const MOpenAISidebar = () => {
         setNotice({});
         setOpen( false );
     };
+
     let fetchRequest  = (param, queryParams ) => {
         return apiFetch( { path: addQueryArgs(`/mopen_ai/v1/${param}`, queryParams )} );
     };
-    let content = useSelect( 'core/editor' ).getBlocks().filter( (i) => i.name === 'core/paragraph' || i.name === 'core/heading' );
-    let temp = '';
-    content.map((item) => {
-        temp += item.attributes.content
-    });
 
     const dispatchTitle = (title) => {
         if (title) {
             const postId = select('core/editor').getCurrentPostId();
             dispatch('core/editor').editPost({title: title, id: postId})
+            dispatch('core/editor').savePost();
             setNotice({message: 'Title updated:', status:'success'});
-            const titleBlock = select('core/editor').getBlocks().find(block => block.name === 'core/post-title');
+            const titleBlock = select('core/block-editor').getBlocks().find(block => block.name === 'core/post-title');
             if (titleBlock) {
                 // Update the title attribute
                     dispatch('core/block-editor').updateBlockAttributes(titleBlock.clientId, {title: title});
@@ -54,6 +51,7 @@ const MOpenAISidebar = () => {
         if (excerpt) {
             const postId = select('core/editor').getCurrentPostId();
             dispatch('core/editor').editPost({excerpt: excerpt, id: postId})
+            dispatch('core/editor').savePost();
             setNotice({message: 'Excerpt updated', status:'success'});
         }
         setOpen( false );
@@ -63,6 +61,11 @@ const MOpenAISidebar = () => {
         setPosts([]);
         setErrors('');
         setExcerpts([]);
+        let content = select( 'core/block-editor' ).getBlocks().filter( (i) => i.name === 'core/paragraph' || i.name === 'core/heading' );
+        let temp = '';
+        content.map((item) => {
+            temp += item.attributes.content
+        });
         const queryParams = { content: temp };
         if (!temp.length) {
             setNotice({message: 'You should have at least 1 paragraph to proceed!'});
@@ -84,6 +87,7 @@ const MOpenAISidebar = () => {
             } else {
                 param === "get-titles" ? setPosts(json_response) : setExcerpts(json_response);
             }
+            dispatch('core/editor').savePost();
             setLoader(false)
         } )
         .catch(error => {
