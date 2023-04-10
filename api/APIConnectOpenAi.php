@@ -50,12 +50,18 @@ final class APIConnectOpenAi
 
     public function createRequest($args) {
 
-        return $this->openaiClient->chatCompletions()->create(
-            new \Tectalic\OpenAi\Models\ChatCompletions\CreateRequest([
-                'model' => $this->options['mopenai_model'],
-                'messages' => $args,
+        if (empty($args[1]['content'])) {
+
+            return [ 'error' => ['message' => __('No content to generate', 'mopenai')] ];
+
+        } else {
+            return $this->openaiClient->chatCompletions()->create(
+                new \Tectalic\OpenAi\Models\ChatCompletions\CreateRequest([
+                    'model' => $this->options['mopenai_model'],
+                    'messages' => $args,
                 ])
-        );
+            );
+        }
     }
 
 }

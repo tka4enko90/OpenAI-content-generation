@@ -1,5 +1,5 @@
 import { useState, useEffect } from '@wordpress/element'
-import {Button, Modal, Spinner} from '@wordpress/components';
+import {Notice, Button, Modal, Spinner} from '@wordpress/components';
 import { useSelect, select, dispatch} from '@wordpress/data';
 import { addQueryArgs } from '@wordpress/url';
 import apiFetch from '@wordpress/api-fetch';
@@ -7,6 +7,8 @@ import { PluginSidebar, PluginSidebarMoreMenuItem } from '@wordpress/edit-post';
 
 const MOpenAISidebar = () => {
     const [ isOpen, setOpen ] = useState( false );
+    const [ isNotice, setNotice ] = useState( false );
+    const [ restNotice, setRestNotice ] = useState( '' );
     const [ posts, setPosts ] = useState( [] );
     const [ excerpts, setExcerpts ] = useState( [] );
     const [ isLoader, setLoader ] = useState( false );
@@ -17,6 +19,7 @@ const MOpenAISidebar = () => {
         setPosts([]);
         setExcerpts([]);
         setErrors('');
+        setNotice('');
         setOpen( false );
     };
     let fetchRequest  = (param, queryParams ) => {
@@ -57,6 +60,7 @@ const MOpenAISidebar = () => {
     const getResponse = (param) => {
         setPosts([]);
         setErrors('');
+        setRestNotice('');
         setExcerpts([]);
         const queryParams = { content: temp };
         console.log(queryParams);
@@ -76,7 +80,13 @@ const MOpenAISidebar = () => {
                 param === "get-titles" ? setPosts(json_response) : setExcerpts(json_response);
             }
             setLoader(false)
-        } );
+        } )
+            .catch(error => {
+                    setRestNotice(error.message);
+                    setOpen( false );
+                    setLoader( false );
+                    setNotice( true );
+            });
 
     };
     return (
@@ -94,7 +104,11 @@ const MOpenAISidebar = () => {
                         <Button isPrimary onClick={() => getResponse('get-excerpts')}>Create excerpt</Button>
                     </div>
                 </div>
-
+                { isNotice && (
+                    <Notice status="error">
+                        <p>{restNotice}</p>
+                    </Notice>
+                )}
                 { isOpen && (
                     <Modal title={modalHeader} onRequestClose={ closeModal }>
                         <div class="components-modal__body">

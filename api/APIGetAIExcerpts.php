@@ -27,13 +27,6 @@ final class APIGetAIExcerpts
     public function request(\WP_REST_Request $request)
     {
 
-        if (!$this->check_nonce()) {
-            return json_encode([ 'error' => ['message' => __('Request security check failed', 'mopenai')] ]);
-        } elseif (!$request['content']) {
-            return json_encode([ 'error' => ['message' => __('No content to generate', 'mopenai')] ]);
-        }
-
-
         $args = [
             [
                 "role" => "system",
@@ -46,9 +39,9 @@ final class APIGetAIExcerpts
         ];
         try {
 
-            if (isset($this->openAI->createRequest($args)->toArray()['error'])) {
+            if (isset($this->openAI->createRequest($args)['error'])) {
 
-                return json_encode($this->openAI->createRequest($args)->toArray(), false);
+                return json_encode($this->openAI->createRequest($args), false);
 
             } else {
                 preg_match_all('/%%(.*?)%%/', $this->openAI->createRequest($args)->toModel()->choices[0]->message->content, $matches);
@@ -57,14 +50,5 @@ final class APIGetAIExcerpts
         } catch (Exception $e) {
             error_log('Can\'t create request for Excerpts');
         }
-    }
-
-    public function check_nonce() {
-        $verify_nonce = wp_verify_nonce( $_SERVER['HTTP_X_WP_NONCE'], 'wp_rest' );
-        $nonce = false;
-        if ($verify_nonce) {
-            $nonce = true;
-        }
-        return $nonce;
     }
 }

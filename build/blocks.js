@@ -158,6 +158,8 @@ __webpack_require__.r(__webpack_exports__);
 
 const MOpenAISidebar = () => {
   const [isOpen, setOpen] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useState)(false);
+  const [isNotice, setNotice] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useState)(false);
+  const [restNotice, setRestNotice] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useState)('');
   const [posts, setPosts] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useState)([]);
   const [excerpts, setExcerpts] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useState)([]);
   const [isLoader, setLoader] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useState)(false);
@@ -167,6 +169,7 @@ const MOpenAISidebar = () => {
     setPosts([]);
     setExcerpts([]);
     setErrors('');
+    setNotice('');
     setOpen(false);
   };
   let fetchRequest = (param, queryParams) => {
@@ -217,6 +220,7 @@ const MOpenAISidebar = () => {
   const getResponse = param => {
     setPosts([]);
     setErrors('');
+    setRestNotice('');
     setExcerpts([]);
     const queryParams = {
       content: temp
@@ -238,6 +242,11 @@ const MOpenAISidebar = () => {
         param === "get-titles" ? setPosts(json_response) : setExcerpts(json_response);
       }
       setLoader(false);
+    }).catch(error => {
+      setRestNotice(error.message);
+      setOpen(false);
+      setLoader(false);
+      setNotice(true);
     });
   };
   return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_edit_post__WEBPACK_IMPORTED_MODULE_5__.PluginSidebarMoreMenuItem, {
@@ -256,7 +265,9 @@ const MOpenAISidebar = () => {
   }, "Create titles"), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.Button, {
     isPrimary: true,
     onClick: () => getResponse('get-excerpts')
-  }, "Create excerpt"))), isOpen && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.Modal, {
+  }, "Create excerpt"))), isNotice && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.Notice, {
+    status: "error"
+  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("p", null, restNotice)), isOpen && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.Modal, {
     title: modalHeader,
     onRequestClose: closeModal
   }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {

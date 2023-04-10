@@ -55,6 +55,7 @@ if( ! class_exists('MOpenAi') ) {
             add_action( 'admin_init', [$this, 'check_editor'] );
             add_action('init', [$this, 'initialization']);
             add_action( 'plugins_loaded', [$this, 'mopenail_plugin_textdomain'] );
+            add_filter( 'plugin_action_links', [$this, 'mopenai_plugin_settings_link'], 10, 2 );
         }
 
         /**
@@ -112,6 +113,15 @@ if( ! class_exists('MOpenAi') ) {
             load_plugin_textdomain( 'mopenai', FALSE, basename( dirname( __FILE__ ) ) . '/lang/' );
 
         }
+
+        public function mopenai_plugin_settings_link( $links, $file ) {
+            if ( plugin_basename( __FILE__ ) == $file ) {
+                $settings_link = '<a href="' . admin_url( 'admin.php?page=mopenai_options' ) . '">' . __( 'Settings', 'mopenai' ) . '</a>';
+                array_unshift( $links, $settings_link );
+            }
+            return $links;
+        }
+
     }
 }
 
