@@ -70,7 +70,16 @@ class APIRegisterRoutes
     public function check_nonce($request) {
         $verify_nonce = wp_verify_nonce($request->get_header('X-WP-Nonce'), 'wp_rest');
         $user_can_edit_posts = current_user_can( 'edit_posts' );
+        $options = get_option('mopeanai_setting');
+        $oai_key = $options['mopenai_api_token'];
 
+        if (!$oai_key) {
+            return new \WP_Error(
+                'rest_forbidden',
+                __( 'API key is empty.', 'mopenai' ),
+                array( 'status' => 403 )
+            );
+        }
         if (!$verify_nonce && !$user_can_edit_posts) {
             return new \WP_Error(
                 'rest_forbidden',
