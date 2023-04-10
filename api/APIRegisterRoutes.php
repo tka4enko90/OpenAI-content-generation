@@ -10,6 +10,7 @@
 namespace MOpenAi\api;
 
 use MOpenAi\api\APIConnectOpenAi;
+use MOpenAi\helpers\ErrorHelper;
 
 /**
  * Register API Routes Class.
@@ -17,6 +18,7 @@ use MOpenAi\api\APIConnectOpenAi;
 class APIRegisterRoutes
 {
     private $openAI;
+    private $error;
     /**
      * Configuration Variable
      *
@@ -42,7 +44,7 @@ class APIRegisterRoutes
     public function mopen_ai_register_api_routes()
     {
         do_action('mopen_ai_before_register_pos_rest_routes');
-        $this->openAI = new APIConnectOpenAi();
+        $this->openAI   = new APIConnectOpenAi();
         $api_routes = [
             'get-titles'              => new APIGetAITitles($this->openAI),
             'get-excerpts'            => new APIGetAIExcerpts($this->openAI),
@@ -85,6 +87,10 @@ class APIRegisterRoutes
         }
         return true;
     }
-
+    public static function errorRequestHelper($args) {
+        if (empty($args[1]['content'])) {
+            return [ 'error' => ['message' => __('No content to generate', 'mopenai')] ];
+        }
+    }
 
 }
