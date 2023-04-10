@@ -7,8 +7,7 @@ import { PluginSidebar, PluginSidebarMoreMenuItem } from '@wordpress/edit-post';
 
 const MOpenAISidebar = () => {
     const [ isOpen, setOpen ] = useState( false );
-    const [ isNotice, setNotice ] = useState( false );
-    const [ restNotice, setRestNotice ] = useState( '' );
+    const [ notice, setNotice ] = useState( {message:''} );
     const [ posts, setPosts ] = useState( [] );
     const [ excerpts, setExcerpts ] = useState( [] );
     const [ isLoader, setLoader ] = useState( false );
@@ -19,32 +18,34 @@ const MOpenAISidebar = () => {
         setPosts([]);
         setExcerpts([]);
         setErrors('');
-        setNotice('');
+        setNotice({});
         setOpen( false );
     };
     let fetchRequest  = (param, queryParams ) => {
         return apiFetch( { path: addQueryArgs(`/mopen_ai/v1/${param}`, queryParams )} );
     };
-
     let content = useSelect( 'core/editor' ).getBlocks().filter( (i) => i.name === 'core/paragraph' || i.name === 'core/heading' );
     let temp = '';
     content.map((item) => {
         temp += item.attributes.content
     });
+
     const dispatchTitle = (title) => {
         if (title) {
             const postId = select('core/editor').getCurrentPostId();
             dispatch('core/editor').editPost({title: title, id: postId})
+            setNotice({message: 'Title updated:', status:'success'});
             const titleBlock = select('core/editor').getBlocks().find(block => block.name === 'core/post-title');
             if (titleBlock) {
-                    // Update the title attribute
+                // Update the title attribute
                     dispatch('core/block-editor').updateBlockAttributes(titleBlock.clientId, {title: title});
                     dispatch('core/editor').editPost({title: title});
-                    console.log('Title updated:', title);
+                    console.log('Title updated', title);
                 } else {
                     console.log('No title block found.');
                 }
         } else {
+            setNotice({message: 'Title is empty or null.'});
             console.log('Title is empty or null.');
         }
         setOpen( false );
@@ -53,6 +54,7 @@ const MOpenAISidebar = () => {
         if (excerpt) {
             const postId = select('core/editor').getCurrentPostId();
             dispatch('core/editor').editPost({excerpt: excerpt, id: postId})
+            setNotice({message: 'Excerpt updated', status:'success'});
         }
         setOpen( false );
     };
@@ -60,10 +62,12 @@ const MOpenAISidebar = () => {
     const getResponse = (param) => {
         setPosts([]);
         setErrors('');
-        setRestNotice('');
         setExcerpts([]);
         const queryParams = { content: temp };
-
+        if (!temp.length) {
+            setNotice({message: 'You should have at least 1 paragraph to proceed!'});
+            return;
+        }
         if (param === 'get-excerpts') {
             setModalHeader('Most Relevant Excerpts')
         }
@@ -72,6 +76,7 @@ const MOpenAISidebar = () => {
         }
         setOpen( true );
         setLoader( true );
+        setNotice(false);
         fetchRequest(param, queryParams).then( ( response ) => {
             let json_response = JSON.parse(response);
             if (json_response['error'] && json_response['error']['message']) {
@@ -81,12 +86,11 @@ const MOpenAISidebar = () => {
             }
             setLoader(false)
         } )
-            .catch(error => {
-                    setRestNotice(error.message);
-                    setOpen( false );
-                    setLoader( false );
-                    setNotice( true );
-            });
+        .catch(error => {
+                setNotice({message: error.message});
+                setOpen( false );
+                setLoader( false );
+        });
 
     };
     return (
@@ -104,12 +108,12 @@ const MOpenAISidebar = () => {
                         <Button isPrimary onClick={() => getResponse('get-excerpts')}>Create excerpt</Button>
                     </div>
                 </div>
-                { isNotice && (
+                { notice.message && (
                     <Notice
-                    status="error"
+                    status={notice.status ?? 'error'}
                     isDismissible={true}
                     onRemove={() => setNotice(false)}>
-                        <p>{restNotice}</p>
+                        <p>{notice.message}</p>
                     </Notice>
                 )}
                 { isOpen && (
