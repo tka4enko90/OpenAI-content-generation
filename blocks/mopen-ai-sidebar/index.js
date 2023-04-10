@@ -30,7 +30,6 @@ const MOpenAISidebar = () => {
         if (title) {
             const postId = select('core/editor').getCurrentPostId();
             dispatch('core/editor').editPost({title: title, id: postId})
-            dispatch('core/editor').savePost();
             setNotice({message: 'Title updated:', status:'success'});
             const titleBlock = select('core/block-editor').getBlocks().find(block => block.name === 'core/post-title');
             if (titleBlock) {
@@ -51,7 +50,6 @@ const MOpenAISidebar = () => {
         if (excerpt) {
             const postId = select('core/editor').getCurrentPostId();
             dispatch('core/editor').editPost({excerpt: excerpt, id: postId})
-            dispatch('core/editor').savePost();
             setNotice({message: 'Excerpt updated', status:'success'});
         }
         setOpen( false );
