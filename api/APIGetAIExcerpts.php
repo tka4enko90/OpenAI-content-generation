@@ -40,15 +40,14 @@ final class APIGetAIExcerpts
         try {
 
             if (is_array($this->openAI->createRequest($args)) && isset($this->openAI->createRequest($args)['error'])) {
-
                 return json_encode($this->openAI->createRequest($args), false);
-
-            } if (isset($this->openAI->createRequest($args)->toArray()['error'])) {
-
-                return json_encode($this->openAI->createRequest($args)->toArray(), false);
             } else {
-                preg_match_all('/%%(.*?)%%/', $this->openAI->createRequest($args)->toModel()->choices[0]->message->content, $matches);
-                return json_encode($matches[1], false);
+                if (isset($this->openAI->createRequest($args)->toArray()['error'])) {
+                    return json_encode($this->openAI->createRequest($args)->toArray(), false);
+                } else {
+                    preg_match_all('/%%(.*?)%%/', $this->openAI->createRequest($args)->toModel()->choices[0]->message->content, $matches);
+                    return json_encode($matches[1], false);
+                }
             }
 
         } catch (\Exception $e) {
