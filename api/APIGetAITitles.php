@@ -42,12 +42,6 @@ final class APIGetAITitles
         ];
         try {
 
-            if (!$this->check_nonce()) {
-                return json_encode([ 'error' => ['message' => __('Request security check failed', 'mopenai')] ]);
-            } elseif (!$request['content']) {
-                return json_encode([ 'error' => ['message' => __('No content to generate', 'mopenai')] ]);
-            }
-
             if (isset($this->openAI->createRequest($args)->toArray()['error'])) {
 
                 return json_encode($this->openAI->createRequest($args)->toArray(), false);
@@ -60,14 +54,5 @@ final class APIGetAITitles
         } catch (\Exception $e) {
             error_log('Can\'t create request for title');
         }
-    }
-
-    public function check_nonce() {
-        $verify_nonce = wp_verify_nonce( $_SERVER['HTTP_X_WP_NONCE'], 'wp_rest' );
-        $nonce = false;
-        if ($verify_nonce) {
-            $nonce = true;
-        }
-        return $nonce;
     }
 }

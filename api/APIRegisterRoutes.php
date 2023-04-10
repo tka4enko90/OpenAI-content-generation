@@ -57,9 +57,7 @@ class APIRegisterRoutes
                     $value->base,
                     [
                         'methods' => isset($value->methods) ? $value->methods : \WP_REST_Server::READABLE,
-                        'permission_callback' => function ($request) {
-                            return true;
-                        },
+                        'permission_callback' => [$this, 'check_nonce'],
                         'callback' => [$value, 'request'],
                     ]
                 );
@@ -67,4 +65,21 @@ class APIRegisterRoutes
         }
         do_action('mopen_ai_after_register_pos_rest_routes');
     }
+
+
+    public function check_nonce($request) {
+        $verify_nonce = wp_verify_nonce($request->get_header('X-WP-Nonce'), 'wp_rest');
+        $user_can_edit_posts = current_user_can( 'edit_posts' );
+
+        if (!$verify_nonce && !$user_can_edit_posts) {
+            return new \WP_Error(
+                'rest_forbidden',
+                __( 'Sorry, you do not have permission to access this resource.', 'mopenai' ),
+                array( 'status' => 403 )
+            );
+        }
+            return true;
+    }
+
+
 }
