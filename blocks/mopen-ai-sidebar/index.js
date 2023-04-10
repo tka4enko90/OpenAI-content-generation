@@ -63,11 +63,11 @@ const MOpenAISidebar = () => {
         setRestNotice('');
         setExcerpts([]);
         const queryParams = { content: temp };
-        console.log(queryParams);
-        if (param == 'get-excerpts') {
+
+        if (param === 'get-excerpts') {
             setModalHeader('Most Relevant Excerpts')
         }
-        if (param == 'get-titles') {
+        if (param === 'get-titles') {
             setModalHeader('Most Relevant Headings')
         }
         setOpen( true );
@@ -105,7 +105,10 @@ const MOpenAISidebar = () => {
                     </div>
                 </div>
                 { isNotice && (
-                    <Notice status="error">
+                    <Notice
+                    status="error"
+                    isDismissible={true}
+                    onRemove={() => setNotice(false)}>
                         <p>{restNotice}</p>
                     </Notice>
                 )}
