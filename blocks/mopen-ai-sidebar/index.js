@@ -87,7 +87,6 @@ const MOpenAISidebar = () => {
             } else {
                 param === "get-titles" ? setPosts(json_response) : setExcerpts(json_response);
             }
-            dispatch('core/editor').savePost();
             setLoader(false)
         } )
         .catch(error => {
