@@ -39,9 +39,9 @@ final class APIGetAIExcerpts
         ];
         try {
 
-            if (isset($this->openAI->createRequest($args)->toArray()['error'])) {
+            if (isset($this->openAI->createRequest($args)['error'])) {
 
-                return json_encode($this->openAI->createRequest($args)->toArray(), false);
+                return json_encode($this->openAI->createRequest($args), false);
 
             } else {
                 preg_match_all('/%%(.*?)%%/', $this->openAI->createRequest($args)->toModel()->choices[0]->message->content, $matches);
