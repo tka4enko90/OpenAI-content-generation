@@ -225,11 +225,10 @@ const MOpenAISidebar = () => {
     const queryParams = {
       content: temp
     };
-    console.log(queryParams);
-    if (param == 'get-excerpts') {
+    if (param === 'get-excerpts') {
       setModalHeader('Most Relevant Excerpts');
     }
-    if (param == 'get-titles') {
+    if (param === 'get-titles') {
       setModalHeader('Most Relevant Headings');
     }
     setOpen(true);
@@ -266,7 +265,9 @@ const MOpenAISidebar = () => {
     isPrimary: true,
     onClick: () => getResponse('get-excerpts')
   }, "Create excerpt"))), isNotice && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.Notice, {
-    status: "error"
+    status: "error",
+    isDismissible: true,
+    onRemove: () => setNotice(false)
   }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("p", null, restNotice)), isOpen && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.Modal, {
     title: modalHeader,
     onRequestClose: closeModal

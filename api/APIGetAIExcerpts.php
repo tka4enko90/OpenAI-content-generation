@@ -37,6 +37,7 @@ final class APIGetAIExcerpts
                 "content" => $request['content']
             ]
         ];
+        $args = apply_filters('mopen_ai_get_excerpts_prompt', $args);
         try {
 
             if (is_array($this->openAI->createRequest($args)) && isset($this->openAI->createRequest($args)['error'])) {

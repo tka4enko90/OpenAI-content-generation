@@ -41,27 +41,23 @@ class APIRegisterRoutes
      */
     public function mopen_ai_register_api_routes()
     {
-
         do_action('mopen_ai_before_register_pos_rest_routes');
+        $this->openAI = new APIConnectOpenAi();
+        $api_routes = [
+            'get-titles'              => new APIGetAITitles($this->openAI),
+            'get-excerpts'            => new APIGetAIExcerpts($this->openAI),
+        ];
 
-        if (!is_admin()) {
-            $this->openAI = new APIConnectOpenAi();
-            $api_routes = [
-                'get-titles'              => new APIGetAITitles($this->openAI),
-                'get-excerpts'              => new APIGetAIExcerpts($this->openAI),
-            ];
-
-            foreach ($api_routes as $key => $value) {
-                \register_rest_route(
-                    'mopen_ai/v1',
-                    $value->base,
-                    [
-                        'methods' => isset($value->methods) ? $value->methods : \WP_REST_Server::READABLE,
-                        'permission_callback' => [$this, 'check_nonce'],
-                        'callback' => [$value, 'request'],
-                    ]
-                );
-            }
+        foreach ($api_routes as $key => $value) {
+            \register_rest_route(
+                'mopen_ai/v1',
+                $value->base,
+                [
+                    'methods' => $value->methods ?? \WP_REST_Server::READABLE,
+                    'permission_callback' => [$this, 'check_nonce'],
+                    'callback' => [$value, 'request'],
+                ]
+            );
         }
         do_action('mopen_ai_after_register_pos_rest_routes');
     }
@@ -87,7 +83,7 @@ class APIRegisterRoutes
                 array( 'status' => 403 )
             );
         }
-            return true;
+        return true;
     }
 
 

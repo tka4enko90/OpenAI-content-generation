@@ -40,6 +40,7 @@ final class APIGetAITitles
                 "content" => 'wrap each titles special symbols as %% in start and end'
             ]
         ];
+        $args = apply_filters('mopen_ai_get_titles_prompt', $args);
         try {
 
         if (is_array($this->openAI->createRequest($args)) && isset($this->openAI->createRequest($args)['error'])) {
