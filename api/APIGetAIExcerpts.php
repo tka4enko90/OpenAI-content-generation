@@ -18,26 +18,15 @@ defined('ABSPATH') || exit();
 final class APIGetAIExcerpts
 {
     public $base = 'get-excerpts';
+    protected $options;
     private $openAI;
     public function __construct(APIConnectOpenAi $openAI)
     {
         $this->openAI = $openAI;
+        $this->options = get_option('mopeanai_setting');
     }
     public function request(\WP_REST_Request $request)
     {
-
-        $args = [
-            [
-                "role" => "system",
-                "content" => "Write 5 different relevant excerpts in 200 words from the following user content, convincing the reader to click the link and read the full article:wrap each excerpt special symbols as %% in start and end"
-            ],
-            [
-                "role" => "user",
-                "content" => $request['content']
-            ]
-        ];
-        $args = apply_filters('mopen_ai_get_excerpts_prompt', $args);
-
-        return $this->openAI->sendRequest($args);
+        return $this->openAI->sendRequest(APIPrompts::mopenPromptExcerpts($this->options['mopenai_model'], $request));
     }
 }
