@@ -11,6 +11,7 @@ use Symfony\Component\HttpClient\Psr18Client;
 use Tectalic\OpenAi\Authentication;
 use Tectalic\OpenAi\Manager;
 use Tectalic\OpenAi\Models\ChatCompletions\CreateRequest;
+use Tectalic\OpenAi\Models\Completions\CreateRequest as Davinci_003;
 defined('ABSPATH') || exit();
 
 
@@ -47,16 +48,35 @@ final class APIConnectOpenAi
         );
     }
 
+    /**
+     * @param $args
+     * @return \Tectalic\OpenAi\Handlers\ChatCompletions|\Tectalic\OpenAi\Handlers\Completions
+     */
     public function createRequest($args) {
 
         $this::errorRequestHelper($args);
 
-       return $this->openaiClient->chatCompletions()->create(
-            new CreateRequest([
-                'model' => $this->options['mopenai_model'],
-                'messages' => $args,
-            ])
-        );
+        switch ( $this->options['mopenai_model'] ) {
+            case 'text-davinci-003':
+                return $this->openaiClient->Completions()->create(
+                    new Davinci_003([
+                        'model' => 'text-davinci-003',
+                        'prompt' => $args,
+                        'max_tokens' => 1000,
+                        'temperature' => 0.7,
+                        ])
+                );
+                break;
+
+            default:
+                return $this->openaiClient->chatCompletions()->create(
+                    new CreateRequest([
+                        'model' => $this->options['mopenai_model'],
+                        'messages' => $args,
+                        ])
+                );
+                break;
+        }
     }
 
     /**
@@ -70,13 +90,12 @@ final class APIConnectOpenAi
 
             if ($this::errorAPIHandler($response)) return $this::errorAPIHandler($response);
 
-            preg_match_all('/%%(.*?)%%/', $response->toModel()->choices[0]->message->content, $matches);
-
-            return json_encode($matches[1], false);
+            return $this::parseResponse($this->options['mopenai_model'], $response);
 
         } catch (\Exception $e) {
             error_log('Can\'t create request', $e);
         }
+
     }
 
     /**
@@ -102,5 +121,21 @@ final class APIConnectOpenAi
         if (empty($args[1]['content'])) {
             return [ 'error' => ['message' => __('No content to generate', 'mopenai')] ];
         }
+    }
+
+    /**
+     * @param $mopenai_model
+     * @param $response
+     * @return false|string
+     */
+    private static function parseResponse($mopenai_model, $response)
+    {
+        if ($mopenai_model == 'text-davinci-003') {
+            preg_match_all('/%%(.*?)%%/', $response->toModel()->choices[0]->text, $matches);
+        } else {
+            preg_match_all('/%%(.*?)%%/', $response->toModel()->choices[0]->message->content, $matches);
+        }
+
+        return json_encode($matches[1], false);
     }
 }

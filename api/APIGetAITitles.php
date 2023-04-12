@@ -7,7 +7,6 @@
 
 namespace MOpenAi\api;
 
-
 defined('ABSPATH') || exit();
 
 
@@ -18,32 +17,23 @@ defined('ABSPATH') || exit();
 final class APIGetAITitles
 {
     private $openAI;
+    protected $options;
     private $error;
     public $base = 'get-titles';
     public function __construct(APIConnectOpenAi $openAI)
     {
         $this->openAI = $openAI;
+        $this->options = get_option('mopeanai_setting');
 
     }
 
+    /**
+     * @param \WP_REST_Request $request
+     * @return false|string
+     */
     public function request(\WP_REST_Request $request)
     {
-        $args = [
-            [
-                "role" => "system",
-                "content" => "Summarize and create 10 titles for articles return exact titles without points numbers in the beginning use user content"
-            ],
-            [
-                "role" => "user",
-                "content" => $request['content']
-            ],
-            [
-                "role" => "system",
-                "content" => 'wrap each titles special symbols as %% in start and end'
-            ]
-        ];
-        $args = apply_filters('mopen_ai_get_titles_prompt', $args);
-
-       return $this->openAI->sendRequest($args);
+       return $this->openAI->sendRequest(APIPrompts::mopenPromptTitles($this->options['mopenai_model'], $request));
     }
+
 }
