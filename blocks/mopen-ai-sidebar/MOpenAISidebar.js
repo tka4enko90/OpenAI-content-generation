@@ -31,7 +31,7 @@ const MOpenAISidebar = () => {
         if (title) {
             const postId = select('core/editor').getCurrentPostId();
             dispatch('core/editor').editPost({title: title, id: postId})
-            setNotice({message: 'Title updated:', status:'success'});
+            setNotice({message: 'Title updated', status:'success'});
             const titleBlock = select('core/block-editor').getBlocks().find(block => block.name === 'core/post-title');
             if (titleBlock) {
                 // Update the title attribute
@@ -81,11 +81,8 @@ const MOpenAISidebar = () => {
         setNotice(false);
         fetchRequest(param, queryParams).then( ( response ) => {
             let json_response = JSON.parse(response);
-            if (json_response['error'] && json_response['error']['message']) {
-                setErrors(json_response['error']['message']);
-            } else {
-                param === "get-titles" ? setPosts(json_response) : setExcerpts(json_response);
-            }
+            if (json_response['error'] && json_response['error']['message'])  throw new Error(json_response['error']['message']);
+            param === "get-titles" ? setPosts(json_response) : setExcerpts(json_response);
             localStorage.setItem(`mopenai_response_${param}`, JSON.stringify(json_response));
             setLoader(false)
         })
@@ -94,7 +91,6 @@ const MOpenAISidebar = () => {
             setOpen( false );
             setLoader( false );
         });
-
     };
 
     return (
@@ -104,14 +100,14 @@ const MOpenAISidebar = () => {
             <div class="mopen-ai__body">
                 <TabPanel className="my-tab-panel" activeClass="active-tab" onSelect={ setSelectedTab }
                     tabs={ [
-                            {
-                                name: 'request',
-                                title: 'Request',
-                                className: 'tab-one',
-                            },
+                    {
+                        name: 'request',
+                        title: 'Request',
+                        className: 'tab-one',
+                    },
                     {
                         name: 'history',
-                            title: 'History',
+                        title: 'History',
                         className: 'tab-two',
                     }
                 ] }
