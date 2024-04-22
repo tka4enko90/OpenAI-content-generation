@@ -2,7 +2,7 @@
 Donate link: https://markupus.com/
 Tags: chatgpt, openai, generate, content, title, excerpts
 Requires at least: 6.1.1
-Tested up to: 6.2
+Tested up to: 6.5.2
 Stable tag: 6.1.1
 Requires PHP: 7.4
 License: GPLv2 or later
